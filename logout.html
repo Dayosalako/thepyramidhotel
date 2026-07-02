@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>The Pyramid Hotel by Aboki — Logged Out</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500;600&display=swap');
+
+  :root{
+    --night:        #0E1326;
+    --night-deep:   #070A16;
+    --sand:         #E8D9B5;
+    --gold:         #C9A24B;
+    --gold-bright:  #E7C879;
+    --clay:         #A85C32;
+    --ivory:        #F7F3E9;
+    --bronze-shadow:#3A2A17;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html,body{
+    margin:0; padding:0; min-height:100%;
+    background: radial-gradient(ellipse at 50% -10%, #1B2240 0%, var(--night) 45%, var(--night-deep) 100%);
+    font-family:'Jost', sans-serif;
+    color: var(--ivory);
+    overflow-x:hidden;
+  }
+
+  .photo-bg-wrap{ position:fixed; inset:0; z-index:0; overflow:hidden; }
+  .photo-bg-layer{
+    position:absolute; inset:0;
+    background-size: cover; background-position: center;
+    opacity: 0; filter: none;
+    transition: opacity 2s ease;
+  }
+  .photo-bg-layer.active{ opacity: 1; }
+  /* overlay removed on request — slideshow now shows at full,
+     unobstructed visibility with nothing dimming it */
+
+  .sky{ position:fixed; inset:0; z-index:0; pointer-events:none; }
+  .star{
+    position:absolute; width:2px; height:2px; border-radius:50%;
+    background: var(--sand); opacity:.55;
+    animation: twinkle 4s ease-in-out infinite;
+  }
+  @keyframes twinkle{ 0%,100%{ opacity:.15; } 50%{ opacity:.8; } }
+
+  .skyline{
+    position:fixed; left:0; right:0; bottom:0; z-index:0;
+    width:100%; height:34vh; min-height:220px;
+    pointer-events:none;
+  }
+
+  .wrap{
+    position:relative; z-index:1;
+    min-height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    padding: 32px 18px 12vh;
+  }
+
+  .card{
+    width:100%; max-width:400px;
+    background: linear-gradient(180deg, rgba(92,86,76,.82), rgba(58,54,47,.88));
+    border:1px solid rgba(201,162,75,.4);
+    border-radius:4px;
+    padding: 40px 34px 34px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 30px 80px -20px rgba(0,0,0,.65);
+    text-align:center;
+  }
+
+  .badge{
+    width:54px; height:54px; margin: 0 auto 16px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background: rgba(201,162,75,.1);
+    border: 1px solid rgba(201,162,75,.4);
+  }
+  .badge svg{ width:22px; height:22px; }
+
+  h1{
+    font-family:'Marcellus', serif; font-weight:400; font-size: 23px;
+    letter-spacing: .5px; margin: 0 0 4px; color: var(--ivory);
+  }
+  .subtitle{
+    font-size: 13px; color: rgba(247,243,233,.65);
+    margin: 0 0 22px; line-height:1.5;
+  }
+  .subtitle b{ color: var(--gold-bright); font-weight:500; }
+
+  .divider{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    margin: 0 0 24px;
+  }
+  .divider::before, .divider::after{
+    content:''; height:1px; width:46px;
+    background: linear-gradient(90deg, transparent, rgba(201,162,75,.55));
+  }
+  .divider::after{ background: linear-gradient(90deg, rgba(201,162,75,.55), transparent); }
+  .divider svg{ width:12px; height:10px; flex-shrink:0; }
+
+  .stats{
+    text-align:left;
+    border-top: 1px solid rgba(201,162,75,.2);
+    border-bottom: 1px solid rgba(201,162,75,.2);
+    padding: 16px 2px; margin-bottom: 26px;
+  }
+  .stat-row{
+    display:flex; justify-content:space-between; align-items:center;
+    font-size: 12.5px; padding: 5px 0;
+  }
+  .stat-row .k{
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: rgba(247,243,233,.5); font-size:10.5px;
+  }
+  .stat-row .v{ color: var(--sand); font-weight:500; }
+
+  .btn{
+    width:100%; padding: 13px 18px; border: none; border-radius: 2px;
+    background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color: #1A1304; font-family:'Jost', sans-serif; font-weight:600;
+    font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+    cursor:pointer; text-decoration:none; display:block;
+    transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+  }
+  .btn:hover{ filter: brightness(1.06); box-shadow: 0 8px 24px -8px rgba(201,162,75,.55); }
+  .btn:active{ transform: translateY(1px); }
+  .btn:focus-visible{ outline: 2px solid var(--gold-bright); outline-offset: 3px; }
+
+  .foot{
+    margin-top: 24px; font-size: 10.5px; letter-spacing: 1.5px;
+    color: rgba(247,243,233,.35); text-transform: uppercase;
+  }
+  .foot span{ color: var(--gold); }
+
+  .preview-tag{
+    position:fixed; left:14px; bottom:14px; z-index:2;
+    font-size: 9.5px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: rgba(232,217,181,.45);
+    border: 1px solid rgba(201,162,75,.3);
+    padding: 5px 10px; border-radius: 20px;
+    background: rgba(10,13,25,.5); backdrop-filter: blur(4px);
+    pointer-events:none;
+  }
+
+  @media (prefers-reduced-motion: reduce){ .star{ animation: none; opacity:.4; } }
+  /* Mobile: shrink the card dramatically so the background photo
+     dominates the screen, with just enough card left to read. */
+  @media (max-width: 480px){
+    .wrap{ padding: 16px 14px 8vh; align-items: flex-end; }
+    .card{ max-width: 300px; padding: 18px 16px 16px; margin: 0 auto; }
+    .badge{ width:38px; height:38px; margin-bottom:8px; }
+    .badge svg{ width:16px; height:16px; }
+    h1{ font-size: 16px; }
+    .subtitle{ font-size: 10.5px; margin-bottom: 12px; }
+    .divider{ margin-bottom: 12px; }
+    .stats{ padding: 10px 2px; margin-bottom: 14px; }
+    .stat-row{ font-size: 11px; padding: 3px 0; }
+    .stat-row .k{ font-size: 9px; }
+    .btn{ padding: 9px 14px; font-size: 11px; }
+    .foot{ font-size: 8px; margin-top: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="photo-bg-wrap">
+  <div class="photo-bg-layer" id="bgLayerA"></div>
+  <div class="photo-bg-layer" id="bgLayerB"></div>
+</div>
+
+<div class="sky" id="sky"></div>
+
+<svg class="skyline" viewBox="0 0 1000 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <polygon points="0,300 0,260 140,150 280,260 280,300" fill="#11162C"/>
+  <polygon points="180,300 180,230 360,90 540,230 540,300" fill="#171D38"/>
+  <polygon points="360,90 360,230 540,230" fill="#0B0E1E" opacity="0.55"/>
+  <polygon points="480,300 480,245 660,160 840,245 840,300" fill="#1D2342"/>
+  <polygon points="660,160 660,245 840,245" fill="#0B0E1E" opacity="0.5"/>
+  <polygon points="760,300 760,255 900,180 1000,235 1000,300" fill="#11162C"/>
+  <line x1="360" y1="90" x2="360" y2="230" stroke="#C9A24B" stroke-width="1" opacity="0.35"/>
+  <line x1="660" y1="160" x2="660" y2="245" stroke="#C9A24B" stroke-width="1" opacity="0.3"/>
+</svg>
+
+<div class="wrap">
+  <div class="card">
+
+    <div class="badge">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke="#C9A24B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M16 17l5-5-5-5" stroke="#C9A24B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M21 12H9" stroke="#C9A24B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <h1>You've Been Logged Out</h1>
+    <p class="subtitle">Thank you, <b id="usernameOut">Guest</b>, for staying connected with us.</p>
+
+    <div class="divider">
+      <svg viewBox="0 0 12 10"><polygon points="6,0 12,10 0,10" fill="#C9A24B"/></svg>
+    </div>
+
+    <div class="stats">
+      <div class="stat-row"><span class="k">Session Length</span><span class="v">0h 42m</span></div>
+      <div class="stat-row"><span class="k">Data Used</span><span class="v">128 MB ↓ &nbsp;/&nbsp; 24 MB ↑</span></div>
+    </div>
+
+    <a class="btn" href="login.html">Log In Again</a>
+
+    <p class="foot">Powered by <span>The Pyramid Hotel</span> &nbsp;·&nbsp; We hope to see you online again</p>
+  </div>
+</div>
+
+<div class="preview-tag">Interactive Preview</div>
+
+<script src="slideshow.js"></script>
+<script>
+  (function(){
+    var name = sessionStorage.getItem('pyramidDemoUsername');
+    if (name){ document.getElementById('usernameOut').textContent = name; }
+    sessionStorage.removeItem('pyramidDemoUsername');
+  })();
+
+  (function(){
+    var sky = document.getElementById('sky');
+    var count = window.innerWidth < 480 ? 26 : 46;
+    for (var i = 0; i < count; i++){
+      var s = document.createElement('div');
+      s.className = 'star';
+      s.style.left = Math.random() * 100 + '%';
+      s.style.top = Math.random() * 60 + '%';
+      s.style.animationDelay = (Math.random() * 4) + 's';
+      sky.appendChild(s);
+    }
+  })();
+</script>
+
+</body>
+</html>
